@@ -74,7 +74,7 @@ void Ram_cdma_session::_attach_dataspace(Ram_dataspace *ds)
 		/* also directly calculate the physical address. I assume that it will
 		 * not change again. */
 		Genode::Dataspace_client dst_client(ds->i_dst_cap);
-		Genode::Dataspace_client src_client(ds->i_cap);
+		Genode::Dataspace_client src_client(ds->i_src_cap);
 
 		ds->storage = new (_md_alloc) Physical_address(dst_client.phys_addr(),
 							       src_client.phys_addr());
