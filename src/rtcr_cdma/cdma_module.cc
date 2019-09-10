@@ -1,5 +1,5 @@
 /*
- * \brief Base module
+ * \brief  Cdma module
  * \author Johannes Fischer
  * \date   2019-08-29
  */

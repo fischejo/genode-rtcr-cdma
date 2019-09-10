@@ -1,6 +1,5 @@
 /*
  * \brief  Intercepting Ram session
- * \author Denis Huber
  * \author Johannes Fischer
  * \date   2019-08-29
  */

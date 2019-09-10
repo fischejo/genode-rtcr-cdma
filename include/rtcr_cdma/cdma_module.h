@@ -1,5 +1,5 @@
 /*
- * \brief  Base Module creates all intecepting sessions
+ * \brief  Cdma Module creates all intecepting sessions
  * \author Johannes Fischer
  * \date   2019-08-29
  */
