@@ -6,20 +6,20 @@ module `rtcr_cdma` inherits from `rtcr` and replaces the default software-based
 dataspace copying by a FPGA implementation.
 
 
-# Genode Repository Dependencies
+# Dependencies
 This repository depends on following Genode repositories
 1. `rtcr` 
-2. `profiler`
 
 
 # Installation
-2. Register `rtcr_cdma` Repository in `build.conf`
-   ```bash
-   # change directory to `etc` of your build directory
-   echo 'REPOSITORIES += $(GENODE_DIR)/repos/rtcr_cdma' >> build.conf
-   ```
+
+Register `rtcr_cdma` Repository in `build.conf`
+```bash
+# change directory to `etc` of your build directory
+echo 'REPOSITORIES += $(GENODE_DIR)/repos/rtcr_cdma' >> build.conf
+```
    
-# Module Linking
+# Linking
 
 Add `rtcr_cdma` library to the dependencies of the `rtcr` library.
 ```bash
@@ -28,8 +28,19 @@ cd repos/rtcr/lib/mk/
 echo 'LIBS += rtcr_cdma' >> rtcr.mk
 ```
 
-**Read [CDMA Driver](./doc/cdma_drv/cdma_drv.md) for the CDMA driver configuration**
+# Configuration
 
+```diff
+ <start name="rtcr_app">
+     <config>
++        <module name="cdma"/>
+     </config>
+ </start>
+```
+
+Read [CDMA Driver](./doc/cdma_drv/cdma_drv.md) for the CDMA driver
+configuration.
+	 
 
 ## Documentation
 All documentation is in directory `doc`.
