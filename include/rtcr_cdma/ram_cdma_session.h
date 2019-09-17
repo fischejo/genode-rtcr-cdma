@@ -45,9 +45,6 @@ public:
 			 Genode::Allocator &md_alloc,
 			 const char *creation_args,
 			 Child_info *child_info);
-
-	Genode::Ram_dataspace_capability alloc(Genode::size_t size,
-					       Genode::Cache_attribute cached) override;
 	
 };
 

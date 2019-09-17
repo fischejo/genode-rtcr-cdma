@@ -56,14 +56,6 @@ void Ram_cdma_session::_alloc_dataspace(Ram_dataspace *ds)
 }
 
 
-Genode::Ram_dataspace_capability Ram_cdma_session::alloc(Genode::size_t size,
-							 Genode::Cache_attribute cached)
-{
-	DEBUG_THIS_CALL;
-	return Ram_session::alloc(size, cached);
-}
-
-
 void Ram_cdma_session::_attach_dataspace(Ram_dataspace *ds)
 {
 	DEBUG_THIS_CALL;
