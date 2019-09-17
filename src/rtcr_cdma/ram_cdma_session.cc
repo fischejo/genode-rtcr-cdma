@@ -40,7 +40,7 @@ Ram_cdma_session::Ram_cdma_session(Genode::Env &env,
 void Ram_cdma_session::_destroy_dataspace(Ram_dataspace *ds)
 {
 	DEBUG_THIS_CALL;
-	if(ds->i_cached) {
+	if(!ds->i_cached) {
 		Genode::destroy(_md_alloc, (Physical_address *)ds->storage);
 	}
 	Ram_session::_destroy_dataspace(ds);
@@ -61,7 +61,7 @@ void Ram_cdma_session::_attach_dataspace(Ram_dataspace *ds)
 	DEBUG_THIS_CALL;
 	Ram_session::_attach_dataspace(ds);
 
-	if(ds->i_cached) {
+	if(!ds->i_cached) {
 		/* also directly calculate the physical address. I assume that it will
 		 * not change again. */
 		Genode::Dataspace_client dst_client(ds->i_dst_cap);
@@ -78,7 +78,7 @@ void Ram_cdma_session::_copy_dataspace(Ram_dataspace *ds)
 	DEBUG_THIS_CALL PROFILE_THIS_CALL;
 	/* only copy a dataspace with hardware-acceleration, if it is supported
 	 * by the dataspace (uncached) */
-	if(ds->i_cached) {
+	if(!ds->i_cached) {
 		Physical_address *p = (Physical_address *)ds->storage;		
 		_cdma_drv.memcpy(p->dst_addr, p->src_addr, ds->i_size);	
 	} else {
