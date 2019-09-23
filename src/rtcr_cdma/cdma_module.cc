@@ -23,19 +23,19 @@ using namespace Rtcr;
 
 /* Create a static instance of the Init_module_factory. This registers the
  * module */
-Rtcr::Cdma_module_factory _cdma_module_factory_instance;
+Module_factory_builder<Cdma_module> _cdma_module_factory_instance;
 
 
 Cdma_module::Cdma_module(Genode::Env &env, Genode::Allocator &alloc)
 	:
-	Init_module(env, alloc)
+	Init_module(env, alloc),
+	_ep(env, 16*1024, "resources ep"),
+	_pd(env, alloc, _ep, _childs_lock, _childs, _services),
+	_cpu(env, alloc, _ep, _childs_lock, _childs, _services),
+	_log(env, alloc, _ep, _childs_lock, _childs, _services),
+	_timer(env, alloc, _ep, _childs_lock, _childs, _services),
+	_rom(env, alloc, _ep, _childs_lock, _childs, _services),
+	_rm(env, alloc, _ep, _childs_lock, _childs, _services)	
 {
 	DEBUG_THIS_CALL;
-	init( new(alloc) Pd_root(env, alloc, _ep, _childs_lock, _childs));
-	init( new(alloc) Cpu_root(env, alloc, _ep, _childs_lock, _childs));
-	init( new(alloc) Ram_cdma_root(env, alloc, _ep, _childs_lock, _childs));
-	init( new(alloc) Rm_root(env, alloc, _ep, _childs_lock, _childs));
-	init( new(alloc) Rom_root(env, alloc, _ep, _childs_lock, _childs));
-	init( new(alloc) Log_root(env, alloc, _ep, _childs_lock, _childs));
-	init( new(alloc) Timer_root(env, alloc, _ep, _childs_lock, _childs));
 }

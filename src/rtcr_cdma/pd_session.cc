@@ -21,12 +21,12 @@ using namespace Rtcr;
 #define DEBUG_THIS_CALL
 #endif
 
-Ram_cdma_session::Ram_cdma_session(Genode::Env &env,
+Pd_cdma_session::Pd_cdma_session(Genode::Env &env,
 				   Genode::Allocator &md_alloc,
 				   const char *creation_args,
 				   Child_info *child_info)
 	:
-	Ram_session(env, md_alloc, creation_args, child_info),
+	Pd_session(env, md_alloc, creation_args, child_info),
 	_cdma_drv(env)
 {
 	DEBUG_THIS_CALL;
@@ -37,7 +37,7 @@ Ram_cdma_session::Ram_cdma_session(Genode::Env &env,
 }
 
 
-void Ram_cdma_session::_destroy_dataspace(Ram_dataspace *ds)
+void Pd_cdma_session::_destroy_dataspace(Ram_dataspace *ds)
 {
 	DEBUG_THIS_CALL;
 	if(!ds->i_cached) {
@@ -47,16 +47,16 @@ void Ram_cdma_session::_destroy_dataspace(Ram_dataspace *ds)
 }
 
 
-void Ram_cdma_session::_alloc_dataspace(Ram_dataspace *ds)
+void Pd_cdma_session::_alloc_dataspace(Ram_dataspace *ds)
 {
 	DEBUG_THIS_CALL;
 	/* only if the src dataspace is allocated as uncached, also the
 	 * destination dataspace will be allocated as uncached */
-	ds->i_dst_cap = _env.ram().alloc(ds->i_size, ds->i_cached);
+	ds->i_dst_cap = _env.pd().alloc(ds->i_size, ds->i_cached);
 }
 
 
-void Ram_cdma_session::_attach_dataspace(Ram_dataspace *ds)
+void Pd_cdma_session::_attach_dataspace(Ram_dataspace *ds)
 {
 	DEBUG_THIS_CALL;
 	Ram_session::_attach_dataspace(ds);
@@ -73,7 +73,7 @@ void Ram_cdma_session::_attach_dataspace(Ram_dataspace *ds)
 }
 
 
-void Ram_cdma_session::_copy_dataspace(Ram_dataspace *ds)
+void Pd_cdma_session::_copy_dataspace(Ram_dataspace *ds)
 {
 	DEBUG_THIS_CALL PROFILE_THIS_CALL;
 	/* only copy a dataspace with hardware-acceleration, if it is supported
@@ -82,17 +82,8 @@ void Ram_cdma_session::_copy_dataspace(Ram_dataspace *ds)
 		Physical_address *p = (Physical_address *)ds->storage;		
 		_cdma_drv.memcpy(p->dst_addr, p->src_addr, ds->i_size);	
 	} else {
-		Ram_session::_copy_dataspace(ds);
+		Pd_session::_copy_dataspace(ds);
 	}
 
 }
-
-
-Ram_session *Ram_cdma_root::_create_ram_session(Child_info *info, const char *args)
-{
-	DEBUG_THIS_CALL;	
-	return new (md_alloc()) Ram_cdma_session(_env, _md_alloc, args, info);
-}
-
-
 

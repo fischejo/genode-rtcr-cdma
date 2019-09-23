@@ -16,5 +16,5 @@ vpath main.cc $(PRG_DIR)
 # in order to enable debug output
 #CC_OPT += -DDEBUG
 
+CC_OPT += -w
 
-CC_CXX_WARN_STRICT =

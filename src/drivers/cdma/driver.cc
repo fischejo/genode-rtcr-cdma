@@ -20,7 +20,7 @@ Driver::Driver(Genode::Env &env,
     _mmio_cdma(env, cdma_address),
     _sg_enabled(sg_enabled),
     _timer(env),
-    _td_ds_cap(env.ram().alloc(TD_DS_SIZE, Cache_attribute::UNCACHED)),
+    _td_ds_cap(env.pd().alloc(TD_DS_SIZE, Cache_attribute::UNCACHED)),
     _td_phys_addr(Genode::Dataspace_client(_td_ds_cap).phys_addr()),
     _irq(env, irq_number)
 
@@ -73,7 +73,7 @@ Driver::Driver(Genode::Env &env,
 Driver::~Driver()
 {
     _env.rm().detach(_td_ds_addr);
-    _env.ram().free(_td_ds_cap);
+    _env.pd().free(_td_ds_cap);
 }
 
 

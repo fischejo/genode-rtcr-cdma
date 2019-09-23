@@ -25,12 +25,12 @@
 #include <rtcr/rom/rom_session.h>
 #include <rtcr/cap/capability_mapping.h>
 #include <rtcr/child_info.h>
+#include <rtcr/root_component.h>
 
-#include <rtcr_cdma/ram_cdma_session.h>
+#include <rtcr_cdma/pd_session.h>
 
 namespace Rtcr {
 	class Cdma_module;
-	class Cdma_module_factory;
 }
 
 using namespace Rtcr;
@@ -42,23 +42,18 @@ using namespace Rtcr;
  */
 class Rtcr::Cdma_module : public virtual Init_module
 {
+private:
+	Genode::Entrypoint _ep;
+	Root_component<Pd_cdma_session> _pd;
+	Root_component<Cpu_session> _cpu;
+	Root_component<Log_session> _log;
+	Root_component<Timer_session> _timer;
+	Root_component<Rom_session> _rom;
+	Root_component<Rm_session> _rm;      
 public:	
 	Cdma_module(Genode::Env &env, Genode::Allocator &alloc);
 	
-	Module_name name() override { return "cdma"; }
+	static Module_name name() { return "cdma"; }
 };
 
-/**
- * Factory class for creating the Rtcr::Base_module
- */
-class Rtcr::Cdma_module_factory : public Module_factory
-{
-public:
-	Init_module* create(Genode::Env &env, Genode::Allocator &alloc) override {
-		return new (alloc) Cdma_module(env, alloc);
-	}
-    
-	Module_name name() override { return "cdma"; }
-};
-
-#endif /* _RTCR_BASE_MODULE_H_ */
+#endif /* _RTCR_CDMA_MODULE_H_ */

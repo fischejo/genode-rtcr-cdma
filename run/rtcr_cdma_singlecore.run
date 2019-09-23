@@ -1,5 +1,5 @@
 #
-# brief: Simple checkpoint/restore example with hardware acceleration
+# brief: Simple checkpoint/restore example
 # author: Fischer Johannes
 # date: 2019-06-14
 #
@@ -23,7 +23,6 @@ install_config {
 		<service name="PD"/>
 		<service name="CPU"/>
 		<service name="ROM"/>
-		<service name="RAM"/>
 		<service name="RM"/>
 		<service name="LOG"/>
 		<service name="IO_MEM"/>
@@ -35,6 +34,8 @@ install_config {
 		<any-service> <parent/> <any-child/> </any-service>	
 	</default-route>
 
+	<default caps="50"/>
+
 	<start name="timer">
      	<resource name="RAM" quantum="1M"/>
         <provides>
@@ -43,21 +44,39 @@ install_config {
 	</start>
 
 	<start name="cdma_drv">
+                <route>
+		       <service name="Timer"> <child name="timer"/> </service>
+                       <any-service> <parent/> </any-service>
+                </route>
 		<resource name="RAM" quantum="1M"/>
-		<provides><service name="Cdma"/></provides>        
+		<provides><service name="Cdma"/></provides>
+
                 <config>
                     <cdma address="0x40002000" irq="63" sg_enabled="true"/>
                 </config>
 	</start>    
 
-	<start name="rtcr_app">
- 		<resource name="RAM" quantum="256M"/>
+	<start name="rtcr_app" caps="8000">
+	       <route>
+		       <service name="Timer"> <child name="timer"/> </service>
+               <any-service> <parent/> </any-service>
+       	   </route>
+		   <provides>
+               <service name="Timer"/>
+    		   <service name="PD"/>
+			   <service name="CPU"/>
+			   <service name="ROM"/>
+			   <service name="RM"/>
+			   <service name="LOG"/>
+            </provides>
+    		<resource name="RAM" quantum="256M"/>
             <config>
-                 <child name="sheep_counter" quota="1048576" xpos="0" />
+                 <module name="cdma"/>
+                 <child name="sheep_counter" quota="140000" xpos="0" caps="1000"/>
                  <checkpoint parallel="false"/>
                  <checkpointable name="cpu_session" xpos="0" />
                  <checkpointable name="pd_session" xpos="0" />    
-                 <checkpointable name="ram_session" xpos="0" />    
+                 <checkpointable name="ram_dataspaces" xpos="0" />    
                  <checkpointable name="rm_session" xpos="0" />    
                  <checkpointable name="rom_session" xpos="0" />    
                  <checkpointable name="log_session" xpos="0" />    
@@ -74,12 +93,11 @@ install_config {
 
 build_boot_image {
 core
+ld.lib.so
 init
 timer
 rtcr_app
 sheep_counter
-horse_counter
-ld.lib.so
 libc.lib.so
 pthread.lib.so
 stdcxx.lib.so
@@ -92,4 +110,4 @@ cdma_drv
 
 append qemu_args " -nographic -smp 2,cores=2 "
 
-run_genode_until "hello test completed.*\n" 60
+run_genode_until "test completed.*\n" 60

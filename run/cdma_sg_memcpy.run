@@ -29,6 +29,9 @@ install_config {
 		<service name="IO_PORT"/>
 		<service name="IRQ"/>
 	</parent-provides>
+
+	<default caps="50"/>
+
 	<default-route>
 		<any-service> <parent/> <any-child/> </any-service>
 	</default-route>
@@ -43,7 +46,7 @@ install_config {
             <cdma address="0x40002000" irq="63" sg_enabled="true"/>
         </config>
 	</start>
-	<start name="cdma_memcpy">
+	<start name="cdma_memcpy" > 
 		<resource name="RAM" quantum="1M"/>
 	</start>    
 </config>}
@@ -52,7 +55,7 @@ install_config {
 # Boot image
 #
 
-build_boot_image { core init timer cdma_drv cdma_memcpy }
+build_boot_image { core ld.lib.so init timer cdma_drv cdma_memcpy }
 
 append qemu_args " -nographic "
 

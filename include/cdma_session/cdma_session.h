@@ -14,33 +14,41 @@
 #include <cdma/driver.h>
 
 namespace Cdma {
-  struct Session;
+	struct Session;
 }      
 
 struct Cdma::Session : Genode::Session
 {
 	static const char *service_name() { return "Cdma"; }
-    virtual void memcpy(Genode::addr_t dst, Genode::addr_t src, Genode::size_t size) = 0;
-    virtual bool is_supported() = 0;
 
-  /*******************
-   ** RPC interface **
-   *******************/
-    GENODE_RPC_THROW(Rpc_cdma_memcpy,
-                     void,
-                     memcpy,
-                     GENODE_TYPE_LIST(Cdma::Function_unsupported,
-                                      Cdma::Internal_memcpy_error,
-                                      Cdma::Invalid_memcpy_address),
-                     Genode::addr_t,
-                     Genode::addr_t,
-                     Genode::size_t);
+	/*
+	 * An CDMA session consumes a dataspace capability for the session-object
+	 * allocation and its session capability.
+	 */
+	enum { CAP_QUOTA = 3 };
+
+	
+	virtual void memcpy(Genode::addr_t dst, Genode::addr_t src, Genode::size_t size) = 0;
+	virtual bool is_supported() = 0;
+
+	/*******************
+	 ** RPC interface **
+	 *******************/
+	GENODE_RPC_THROW(Rpc_cdma_memcpy,
+			 void,
+			 memcpy,
+			 GENODE_TYPE_LIST(Cdma::Function_unsupported,
+					  Cdma::Internal_memcpy_error,
+					  Cdma::Invalid_memcpy_address),
+			 Genode::addr_t,
+			 Genode::addr_t,
+			 Genode::size_t);
     
-    GENODE_RPC(Rpc_cdma_is_supported,
-               bool,
-               is_supported);
+	GENODE_RPC(Rpc_cdma_is_supported,
+		   bool,
+		   is_supported);
 
-    GENODE_RPC_INTERFACE(Rpc_cdma_memcpy, Rpc_cdma_is_supported);
+	GENODE_RPC_INTERFACE(Rpc_cdma_memcpy, Rpc_cdma_is_supported);
 };
 
 
