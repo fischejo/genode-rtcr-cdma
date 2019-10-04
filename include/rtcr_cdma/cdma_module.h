@@ -54,6 +54,12 @@ public:
 	Cdma_module(Genode::Env &env, Genode::Allocator &alloc);
 	
 	static Module_name name() { return "cdma"; }
+
+	Pd_session &create_pd_session(Genode::Session_state::Args args,
+				      Genode::Affinity affinity) override {
+		return _pd.create(args, affinity);
+	}
+
 };
 
 #endif /* _RTCR_CDMA_MODULE_H_ */
