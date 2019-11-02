@@ -8,7 +8,7 @@
 # Build
 #
 
-build { core init drivers/timer drivers/cdma test/cdma_memcpy}
+build { core init timer drivers/cdma test/cdma_memcpy}
 
 create_boot_directory
 
@@ -35,11 +35,11 @@ install_config {
 	<default-route>
 		<any-service> <parent/> <any-child/> </any-service>
 	</default-route>
-	<start name="timer">
-		<resource name="RAM" quantum="1M"/>
+	<start name="timer" caps="100">
+		<resource name="RAM" quantum="10M"/>
 		<provides><service name="Timer"/></provides>
 	</start>
-	<start name="cdma_drv">
+	<start name="cdma_drv" caps="100">
 		<resource name="RAM" quantum="10M"/>
 		<provides><service name="Cdma"/></provides>        
         <config>
@@ -59,7 +59,7 @@ build_boot_image { core ld.lib.so init timer cdma_drv cdma_memcpy }
 
 append qemu_args " -nographic "
 
-run_genode_until "the_end*" 30
+run_genode_until "the_end*" 120
 
 
 

@@ -8,7 +8,7 @@
 # Build
 #
 
-build { core init drivers/timer app/rtcr_app app/sheep_counter drivers/cdma }
+build { core init timer app/rtcr_app app/sheep_counter drivers/cdma }
 
 create_boot_directory
 
@@ -36,8 +36,8 @@ install_config {
 
 	<default caps="50"/>
 
-	<start name="timer">
-     	<resource name="RAM" quantum="1M"/>
+	<start name="timer" caps="100">
+     	<resource name="RAM" quantum="10M"/>
         <provides>
             <service name="Timer"/>
        </provides>
@@ -72,7 +72,7 @@ install_config {
     		<resource name="RAM" quantum="256M"/>
             <config>
                  <module name="cdma"/>
-                 <child name="sheep_counter" quota="140000" xpos="0" caps="1000"/>
+                 <child name="sheep_counter" quota="1000000" xpos="0" caps="1000"/>
                  <checkpoint parallel="false"/>
                  <checkpointable name="cpu_session" xpos="0" />
                  <checkpointable name="pd_session" xpos="0" />    
@@ -104,6 +104,7 @@ stdcxx.lib.so
 libm.lib.so
 libprotobuf.lib.so
 zlib.lib.so
+vfs.lib.so
 cdma_drv
 }
 

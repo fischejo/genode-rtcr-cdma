@@ -18,7 +18,6 @@
 #include <base/sleep.h>
 #include "cdma.h"
 #include <dataspace/client.h>
-#include <ram_session/capability.h>
 #include <region_map/client.h>
 #include <base/lock.h>
 

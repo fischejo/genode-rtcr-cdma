@@ -17,8 +17,9 @@ namespace Cdma {
 struct Cdma::Connection : Genode::Connection<Session>, Session_client
 {
 	Connection(Genode::Env &env)
-    : Genode::Connection<Session>(session(env.parent(), "ram_quota=8K")),
-        Session_client(cap()) { }
+	:
+		Genode::Connection<Session>(env, session(env.parent(), "ram_quota=8K")),
+		Session_client(cap()) { }
 };
 
 
